@@ -18,7 +18,7 @@ import modelo.Personaje;
 public class Partida {
 	
 	Scanner sc = new Scanner(System.in);
-	private static Personaje elegido;
+	private static Personaje protagonista;
 
     //menu juego
 	public static void mostrarMenu() {
@@ -55,10 +55,12 @@ public class Partida {
 
         sc.close();
     }
-    
-	//metodo de login
-
- // Método para iniciar sesión
+	
+	//*********************************************************************************
+	//************************** METODOS DE LOGIN *************************************
+	//*********************************************************************************
+	
+	// metodo para iniciar sesión
     private static void iniciarSesion(Scanner sc) {
         System.out.println("\n=== INICIAR SESIÓN ===");
         System.out.print("Introduce tu nombre de usuario: ");
@@ -74,9 +76,9 @@ public class Partida {
         	//llave para acceder a los metodos de DaoLogin
             DaoLogin accesoBD = DaoLogin.getInstance();
            
-            if (accesoBD.verificarLogin(datosUsuario)) {
+            if (accesoBD.verificarLogin(datosUsuario)==true) {
                 System.out.println("✅ Sesión iniciada correctamente. ¡Bienvenido " + nombreUsuario + "!");
-                iniciarJuego(); // Aquí se llamaría al juego
+                iniciarJuego(); 
             } else {
                 System.out.println("❌ Usuario o contraseña incorrectos.");
             }
@@ -86,7 +88,7 @@ public class Partida {
         }
     }
     
- // Método para registrar un nuevo usuario
+ // metodo para registrar un nuevo usuario
     private static void registrarUsuario(Scanner sc) {
 
         System.out.println("\n=== REGISTRO DE USUARIO NUEVO ===");
@@ -128,89 +130,90 @@ public class Partida {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-   
-    
-
-
+	//*********************************************************************************
+    //*************************** OTROS METODOS ***************************************
+	//*********************************************************************************
 
 
     public static void iniciarJuego() throws SQLException {
-    	
-    	boolean resultadoBatalla=false;
-    	
-    	dibujo.logo();
-        System.out.println("Aquí comienza tu aventura en Doraemon POO...");
+        // Mostrar introducción
+        dibujo.logo();
+        System.out.println("🎮 Aquí empieza tu aventura en Doraemon POO...");
         dibujo.caraDoraemon();
         Textos.intro();
-        seleccionarPersonaje();
 
-        DaoPersonaje dao = DaoPersonaje.getInstance(); 
-        Personaje enemigo = dao.obtenerEnemigoPorLugarDePersonaje(elegido.getId());
+        // Elegir personaje principal
+        seleccionarPersonaje();
+        
+        //llave de acceso a los metodos de Dao Personaje
+        DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
+
+        // Buscar un enemigo según el personaje elegido
+        Personaje enemigo = daoPersonaje.obtenerEnemigoPorLugarDePersonaje(protagonista.getId());
 
         if (enemigo == null) {
-            System.out.println("❌ No se encontró un enemigo para este lugar.");
+            System.out.println("❌ No se encontró enemigo para este lugar.");
             return;
         }
 
-        //Cargar ataques del enemigo 
-        ArrayList<Ataque> ataquesEnemigo = dao.obtenerAtaquesDePersonaje(enemigo.getId());
-        enemigo.setAtaques(ataquesEnemigo);
+        // Cargar ataques del enemigo
+        enemigo.setAtaques(daoPersonaje.obtenerAtaquesDePersonaje(enemigo.getId()));
 
-        System.out.println("Te enfrentas a: " + enemigo.getNombre());
-        Batalla batalla = new Batalla(elegido, enemigo);
-        batalla.iniciarCombate();
-        if (resultadoBatalla==true) {
-        	System.out.println("Enhorabuena: " + elegido.getNombre() + " continuas la aventura");
+        // Mostrar enemigo y empezar la batalla
+        System.out.println("⚔️ Te enfrentas a: " + enemigo.getNombre());
+        Batalla batalla = new Batalla(protagonista, enemigo);
+
+        boolean ganoBatalla = batalla.iniciarCombate(); // Este método debería devolver true o false
+
+        // Resultado de la batalla
+        if (ganoBatalla) {
+            System.out.println("✅ ¡Ganaste! " + protagonista.getNombre() + " continúa la aventura.");
+        } else {
+            System.out.println("💀 Has sido derrotado. Fin del juego.");
         }
-        else {
-        	System.out.println("Has muerto, que pringado");
-        }
-        
     }
+
     
     private static void seleccionarPersonaje() throws SQLException {
         Scanner sc = new Scanner(System.in);
-        DaoPersonaje dao = DaoPersonaje.getInstance(); 
+        
+        //llave de acceso a los metodos de DaoPersonaje
+        DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
 
-        ArrayList<Personaje> personajes = (ArrayList<Personaje>) dao.mostrarPersonajesPrincipales();
+        // Mostrar lista de personajes
+        ArrayList<Personaje> listaPersonaje = (ArrayList<Personaje>) daoPersonaje.mostrarPersonajesPrincipales();
 
-        System.out.println("\n📜 Lista de personajes disponibles:");
-        for (int i = 0; i < personajes.size(); i++) {
-            Personaje p = personajes.get(i);
+        System.out.println("\n📜 Personajes disponibles:");
+        for (int i = 0; i < listaPersonaje.size(); i++) {
+            Personaje p = listaPersonaje.get(i);
             System.out.println(p.getId() + " - " + p.getNombre());
         }
 
-        System.out.print("Selecciona un personaje por ID: ");
-        int idSeleccionado = sc.nextInt();
+        // Elegir personaje
+        System.out.print("🔍 Escribe el ID del personaje que quieres usar: ");
+        int idElegido = sc.nextInt();
 
-        elegido = dao.seleccionarPersonaje(idSeleccionado);  // ✅ corregido aquí
-        if (elegido == null) {
-            System.out.println("❌ ID no válido. No se seleccionó ningún personaje.");
-        } else {
-            System.out.println("✅ Has elegido a: " + elegido.getNombre() + " (Vida: " + elegido.getVida() + ")");
+        //Almacenamos en protagonista la id del personaje
+        protagonista = daoPersonaje.seleccionarPersonaje(idElegido);
 
-            ArrayList<Ataque> ataques = (ArrayList<Ataque>) dao.obtenerAtaquesDePersonaje(elegido.getId());
-            System.out.println("\n⚔️ Ataques disponibles:");
-            for (int i = 0; i < ataques.size(); i++) {
-                Ataque a = ataques.get(i);
-                System.out.println((i + 1) + ". " + a.getNombre() + " - " + a.getDescripcion() + " (Daño: " + a.getDano() + ")");
-            }
-            elegido.setAtaques(ataques);
+        // Validar selección
+        if (protagonista == null) {
+            System.out.println("❌ ID inválido. No se seleccionó personaje.");
+            return;
+        }
+
+        // Mostrar personaje y ataques
+        System.out.println("✅ Elegiste a: " + protagonista.getNombre() + " (Vida: " + protagonista.getVida() + ")");
+        
+        ArrayList<Ataque> ataques = (ArrayList<Ataque>) daoPersonaje.obtenerAtaquesDePersonaje(protagonista.getId());
+        protagonista.setAtaques(ataques);
+
+        System.out.println("\n⚔️ Ataques disponibles:");
+        for (int i = 0; i < ataques.size(); i++) {
+            Ataque a = ataques.get(i);
+            System.out.println((i + 1) + ". " + a.getNombre() + ": " + a.getDescripcion() + " (Daño: " + a.getDano() + ")");
         }
     }
+
 
 }
