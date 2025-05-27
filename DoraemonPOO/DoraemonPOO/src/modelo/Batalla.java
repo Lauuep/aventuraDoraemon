@@ -38,7 +38,9 @@ public class Batalla {
 
 
 
-    public void iniciarCombate() {
+    public boolean iniciarCombate() {
+    	
+    	boolean resultadoBatalla=false;
         System.out.println("⚔️ ¡Batalla entre " + jugador.getNombre() + " y " + enemigo.getNombre() + "!");
         System.out.println("🌦️ Clima actual: " + climaActual);
         System.out.println("🕒 Momento del día: " + momentoActual);
@@ -55,9 +57,12 @@ public class Batalla {
 
         if (jugador.getVida() <= 0) {
             System.out.println("\n💀 Has sido derrotado...");
+            resultadoBatalla=false;
         } else {
             System.out.println("\n🏆 ¡Has ganado!");
+            resultadoBatalla=true;
         }
+        return resultadoBatalla;
     }
 
     private void turnoDelJugador() {

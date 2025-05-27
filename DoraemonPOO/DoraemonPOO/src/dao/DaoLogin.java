@@ -67,7 +67,9 @@ public class DaoLogin {
         stmt.setString(1, login.getUsername());
         stmt.setString(2, login.getPassword());
         ResultSet rs = stmt.executeQuery();
-     // true si hay coincidencia, false si no
+        
+     //Devuelve true si hay al menos un resultado (es decir, encontró un usuario con esos datos).
+     //Devuelve false si no encontró ninguno (usuario o contraseña incorrectos).
         return rs.next(); 
     }
     
