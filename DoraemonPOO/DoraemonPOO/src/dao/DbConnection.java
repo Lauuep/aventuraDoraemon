@@ -17,8 +17,9 @@ public class DbConnection {
     public static Connection getConnection() throws SQLException {
     	if (instance==null) {
 			Properties props = new Properties ();
-			props.put("user","root");
-			props.put("password", "");
+			
+			props.put("user", DB_USER);
+			props.put("password", DB_PASSWORD);
 			
 			instance =  DriverManager.getConnection(DB_URL, props);
 
