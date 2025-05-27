@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import dao.DoaMochila;
 import dao.DaoBolsillo;
+import dao.DaoLogin;
 
 public class Batalla {
     private Personaje jugador;
@@ -60,6 +61,7 @@ public class Batalla {
         } else {
             System.out.println("\n🏆 ¡Has ganado!");
             resultadoBatalla=true;
+
         }
         return resultadoBatalla;
     }

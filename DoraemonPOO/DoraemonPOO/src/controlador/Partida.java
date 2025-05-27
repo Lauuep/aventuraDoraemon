@@ -46,9 +46,10 @@ public class Partida {
                 	registrarUsuario();
                 case 3:
                 	System.out.println("RANKING.");
-                	break;
+                	//mostrarRanking();
                 case 4:
                 	salir=true;
+                	System.out.println("Chao pescao");
                 	break;
                 default:
                 	System.out.println("Error: Opción no valida.");
@@ -133,6 +134,7 @@ public class Partida {
             System.out.println("⚠️ Ocurrió un error al registrar: " + error.getMessage());
         }
     }
+    
 
 	//*********************************************************************************
     //*************************** OTROS METODOS ***************************************

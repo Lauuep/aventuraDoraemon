@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import modelo.Login;
 
@@ -72,5 +73,6 @@ public class DaoLogin {
      //Devuelve false si no encontró ninguno (usuario o contraseña incorrectos).
         return rs.next(); 
     }
+   
     
 }
