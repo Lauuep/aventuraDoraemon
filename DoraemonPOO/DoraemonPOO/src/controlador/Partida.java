@@ -19,11 +19,7 @@ import modelo.Personaje;
 
 public class Partida {
 	
-<<<<<<< HEAD
 	private static Scanner sc= new Scanner(System.in);
-=======
-	Scanner sc = new Scanner(System.in);
->>>>>>> origin/and!!
 	private static Personaje protagonista;
 
 	// *** MENÚ PRINCIPAL DEL JUEGO ***
@@ -67,11 +63,7 @@ public class Partida {
 	//*********************************************************************************
 	
 	// metodo para iniciar sesión
-<<<<<<< HEAD
     private static void iniciarSesion() {
-=======
-    private static void iniciarSesion(Scanner sc) {
->>>>>>> origin/and!!
         System.out.println("\n=== INICIAR SESIÓN ===");
         System.out.print("Introduce tu nombre de usuario: ");
         String nombreUsuario = sc.nextLine();
@@ -86,11 +78,7 @@ public class Partida {
         	//llave para acceder a los metodos de DaoLogin
             DaoLogin daoLogin = DaoLogin.getInstance();
            
-<<<<<<< HEAD
             if (daoLogin.verificarLogin(datosUsuario)==true) {
-=======
-            if (accesoBD.verificarLogin(datosUsuario)==true) {
->>>>>>> origin/and!!
                 System.out.println("✅ Sesión iniciada correctamente. ¡Bienvenido " + nombreUsuario + "!");
                 iniciarJuego(); 
             } else {
@@ -103,11 +91,7 @@ public class Partida {
     }
     
  // metodo para registrar un nuevo usuario
-<<<<<<< HEAD
     private static void registrarUsuario() {
-=======
-    private static void registrarUsuario(Scanner sc) {
->>>>>>> origin/and!!
 
         System.out.println("\n=== REGISTRO DE USUARIO NUEVO ===");
 
@@ -153,10 +137,6 @@ public class Partida {
 	//*********************************************************************************
     //*************************** OTROS METODOS ***************************************
 	//*********************************************************************************
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/and!!
 
     // *** INICIAR JUEGO ***
     public static void iniciarJuego() throws SQLException {
@@ -171,10 +151,7 @@ public class Partida {
         
         //llave de acceso a los metodos de Dao Personaje
         DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
-<<<<<<< HEAD
         DaoAtaque daoAtaque = DaoAtaque.getInstance();
-=======
->>>>>>> origin/and!!
 
         // Buscar un enemigo según el personaje elegido
         Personaje enemigo = daoPersonaje.obtenerEnemigoPorLugarDePersonaje(protagonista.getId());
@@ -185,11 +162,7 @@ public class Partida {
         }
 
         // Cargar ataques del enemigo
-<<<<<<< HEAD
         enemigo.setAtaques(daoAtaque.obtenerAtaquesDePersonaje(enemigo.getId()));
-=======
-        enemigo.setAtaques(daoPersonaje.obtenerAtaquesDePersonaje(enemigo.getId()));
->>>>>>> origin/and!!
 
         // Mostrar enemigo y empezar la batalla
         System.out.println("⚔️ Te enfrentas a: " + enemigo.getNombre());
@@ -209,14 +182,9 @@ public class Partida {
     private static void seleccionarPersonaje() throws SQLException {
         Scanner sc = new Scanner(System.in);
         
-<<<<<<< HEAD
         //llave de acceso a los metodos de DaoPersonaje y DaoAtaque
         DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
         DaoAtaque daoAtaque = DaoAtaque.getInstance();
-=======
-        //llave de acceso a los metodos de DaoPersonaje
-        DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
->>>>>>> origin/and!!
 
         // Mostrar lista de personajes
         ArrayList<Personaje> listaPersonaje = (ArrayList<Personaje>) daoPersonaje.mostrarPersonajesPrincipales();
@@ -231,11 +199,7 @@ public class Partida {
         System.out.print("🔍 Escribe el ID del personaje que quieres usar: ");
         int idElegido = sc.nextInt();
 
-<<<<<<< HEAD
         //Almacenamos en protagonista la id del person
-=======
-        //Almacenamos en protagonista la id del personaje
->>>>>>> origin/and!!
         protagonista = daoPersonaje.seleccionarPersonaje(idElegido);
 
         // Validar selección
@@ -247,11 +211,7 @@ public class Partida {
         // Mostrar personaje y ataques
         System.out.println("✅ Elegiste a: " + protagonista.getNombre() + " (Vida: " + protagonista.getVida() + ")");
         
-<<<<<<< HEAD
         ArrayList<Ataque> ataques = (ArrayList<Ataque>) daoAtaque.obtenerAtaquesDePersonaje(protagonista.getId());
-=======
-        ArrayList<Ataque> ataques = (ArrayList<Ataque>) daoPersonaje.obtenerAtaquesDePersonaje(protagonista.getId());
->>>>>>> origin/and!!
         protagonista.setAtaques(ataques);
 
         System.out.println("\n⚔️ Ataques disponibles:");

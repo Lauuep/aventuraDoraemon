@@ -77,5 +77,4 @@ public class DaoLogin {
         return rs.next(); 
     }
     
-   
 }
