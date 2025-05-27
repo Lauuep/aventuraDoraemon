@@ -134,7 +134,7 @@ public class dibujo {
 	
 		System.out.println("hola");
 		System.out.println("de locoooooooos");
-	
+		System.out.println("thunder burguer");
 	
 	
 	}
