@@ -17,9 +17,11 @@ import modelo.Personaje;
 
 public class Partida {
 	
+	Scanner sc = new Scanner(System.in);
 	private static Personaje elegido;
 
-    public static void mostrarMenu() {
+    //menu juego
+	public static void mostrarMenu() {
         Scanner sc = new Scanner(System.in);
         boolean salir = false;
         
@@ -54,63 +56,95 @@ public class Partida {
         sc.close();
     }
     
-    
-    // Iniciar sesión
+	//metodo de login
+
+ // Método para iniciar sesión
     private static void iniciarSesion(Scanner sc) {
-        boolean loginCorrecto = false;
+        System.out.println("\n=== INICIAR SESIÓN ===");
+        System.out.print("Introduce tu nombre de usuario: ");
+        String nombreUsuario = sc.nextLine();
 
-        while (!loginCorrecto) {
-            System.out.print("Usuario: ");
-            String usuario = sc.nextLine();
-            System.out.print("Contraseña: ");
-            String pass = sc.nextLine();
+        System.out.print("Introduce tu contraseña: ");
+        String contrasena = sc.nextLine();
 
-            Login login = new Login(usuario, pass);
-
-            try {
-                DaoLogin dao = DaoLogin.getInstance();
-                if (dao.verificarLogin(login)) {
-                    System.out.println("✅ Inicio de sesión exitoso. ¡Bienvenido, " + usuario + "!");
-                    iniciarJuego();
-                    loginCorrecto = true;
-                } else {
-                    System.out.println("❌ Usuario o contraseña incorrectos.");
-                }
-            } catch (Exception e) {
-                System.out.println("Error al iniciar sesión: " + e.getMessage());
-                break;
+        // Creamos el objeto con los datos
+        Login datosUsuario = new Login(nombreUsuario, contrasena);
+        
+        try {
+        	//llave para acceder a los metodos de DaoLogin
+            DaoLogin accesoBD = DaoLogin.getInstance();
+           
+            if (accesoBD.verificarLogin(datosUsuario)) {
+                System.out.println("✅ Sesión iniciada correctamente. ¡Bienvenido " + nombreUsuario + "!");
+                iniciarJuego(); // Aquí se llamaría al juego
+            } else {
+                System.out.println("❌ Usuario o contraseña incorrectos.");
             }
+
+        } catch (Exception e) {
+            System.out.println("⚠️ Error al iniciar sesión: " + e.getMessage());
         }
     }
+    
+ // Método para registrar un nuevo usuario
+    private static void registrarUsuario(Scanner sc) {
+
+        System.out.println("\n=== REGISTRO DE USUARIO NUEVO ===");
+
+        // Pedimos el nombre de usuario
+        System.out.print("👉 Escribe un nombre de usuario: ");
+        String nombreUsuario =sc.nextLine();
+
+        // Pedimos la contraseña
+        System.out.print("🔒 Escribe una contraseña: ");
+        String contrasena = sc.nextLine();
+
+        // Creamos un objeto Login con los datos introducidos
+        Login nuevoUsuario = new Login(nombreUsuario, contrasena);
+
+        try {
+            //llave para acceder a lo metodos de DaoLogin
+            DaoLogin accesoBD = DaoLogin.getInstance();
+
+            // Comprobamos si ese usuario ya está registrado
+            boolean yaExiste = accesoBD.usuarioExiste(nombreUsuario);
+
+            if (yaExiste==true) {
+                System.out.println("❌ Ese nombre de usuario ya está en uso. Intenta con otro diferente.");
+            } else {
+                // Intentamos insertar el nuevo usuario
+                boolean registradoCorrectamente = accesoBD.insertarUsuario(nuevoUsuario);
+
+                if (registradoCorrectamente==true) {
+                    System.out.println("✅ Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!");
+                } else {
+                    System.out.println("❌ Hubo un problema al registrar al usuario.");
+                }
+            }
+
+        } catch (Exception error) {
+            // Mostramos el error si algo falla
+            System.out.println("⚠️ Ocurrió un error al registrar: " + error.getMessage());
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
    
     
-    // Registrar usuario
-    private static void registrarUsuario(Scanner sc) {
-        System.out.print("Nuevo usuario: ");
-        String usuario = sc.nextLine();
-        System.out.print("Nueva contraseña: ");
-        String pass = sc.nextLine();
 
-        Login nuevo = new Login(usuario, pass);
-
-        try {
-            DaoLogin dao = DaoLogin.getInstance();
-
-            if (dao.usuarioExiste(usuario)) {
-                System.out.println("❌ El usuario ya existe.");
-                return;
-            }
-
-            if (dao.insertarUsuario(nuevo)) {
-                System.out.println("✅ Registro exitoso.");
-            } else {
-                System.out.println("❌ No se pudo registrar el usuario.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error al registrar: " + e.getMessage());
-        }
-    }
 
 
 
