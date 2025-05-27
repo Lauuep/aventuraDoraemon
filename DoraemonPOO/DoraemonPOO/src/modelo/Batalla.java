@@ -37,7 +37,6 @@ public class Batalla {
     }
 
 
-
     public boolean iniciarCombate() {
     	
     	boolean resultadoBatalla=false;
@@ -177,19 +176,19 @@ public class Batalla {
 
     private void usarBolsilloMagico() {
         try {
-            Bolsillo obj = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
-            if (obj == null) {
+            Bolsillo objetoBolsillo = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
+            if (objetoBolsillo == null) {
                 System.out.println("🔮 El bolsillo está vacío.");
                 return;
             }
 
-            System.out.println("✨ Has sacado: " + obj.getNombre());
-            System.out.println("📝 " + obj.getDescripcion());
-            System.out.println("💬 " + obj.getFrase());
+            System.out.println("✨ Has sacado: " + objetoBolsillo.getNombre());
+            System.out.println("📝 " + objetoBolsillo.getDescripcion());
+            System.out.println("💬 " + objetoBolsillo.getFrase());
 
-            if (obj.getDano() > 0) {
-                enemigo.setVida(Math.max(0, enemigo.getVida() - obj.getDano()));
-                System.out.println("💥 El objeto causó " + obj.getDano() + " de daño al enemigo.");
+            if (objetoBolsillo.getDano() > 0) {
+                enemigo.setVida(Math.max(0, enemigo.getVida() - objetoBolsillo.getDano()));
+                System.out.println("💥 El objeto causó " + objetoBolsillo.getDano() + " de daño al enemigo.");
             }
 
         } catch (Exception e) {
@@ -199,7 +198,7 @@ public class Batalla {
 
     private void usarObjetoDeMochila() {
         try {
-            List<Objeto> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
+            ArrayList<Objeto> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
             if (mochila == null || mochila.isEmpty()) {
                 System.out.println("👜 Tu mochila está vacía.");
                 return;
