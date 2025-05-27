@@ -5,7 +5,8 @@ import java.sql.*;
 import modelo.Login;
 
 public class DaoLogin {
-
+	
+	//conexión a la base de datos
     private Connection conn = null;
     private static DaoLogin instance = null;
 
@@ -21,21 +22,21 @@ public class DaoLogin {
         return instance;
 
     }
-
-    // metodo que comprueba si un nombre de usuario ya está registrado
+    
+    
     public boolean usuarioExiste(String username) throws SQLException {
     	//sentencia sql
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        //parámetro de la consulta
-        stmt.setString(1, username); 
+        stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
-        //Devuelve true si hay una coincidencia
-        return rs.next(); 
+        return rs.next();
     }
+    
 
     // Método que inserta un nuevo usuario en la base de datos
     public boolean insertarUsuario(Login login) throws SQLException {
+    	 boolean registroCorrecto = false;
     	//sentencia sql
         String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -49,11 +50,12 @@ public class DaoLogin {
         // comprueba si se hizo correctamente, es decir si se añadio alguna fila
         if (recordsInserted > 0) {
             System.out.println("Usuario registrado con éxito 👌");
-            return true;
+            registroCorrecto=true;
         } else {
             System.out.println("Error. Usuario no registrado 🤦");
-            return false;
+            registroCorrecto=false;
         }
+        return registroCorrecto;
     }
 
     //verifica si existen credenciales válidas en la base de datos
