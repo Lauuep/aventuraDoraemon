@@ -19,6 +19,8 @@ public class DoaMochila {
         }
         return instance;
     }
+    
+    
 
     // Obtener todos los objetos en la mochila de un personaje
     public ArrayList<Objeto> obtenerObjetosDeMochila(int personajeId) {
