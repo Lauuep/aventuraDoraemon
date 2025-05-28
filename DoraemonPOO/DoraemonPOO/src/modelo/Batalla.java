@@ -2,13 +2,13 @@
 package modelo;
 
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Random;
 import java.util.Scanner;
 
 import dao.DoaMochila;
 import dao.DaoBolsillo;
-import dao.DaoLogin;
+
 
 public class Batalla {
     private Personaje jugador;
@@ -236,37 +236,103 @@ public class Batalla {
  // Usa un objeto aleatorio del bolsillo mágico
     private void usarBolsilloMagico() {
         try {
-            // Sacamos un objeto aleatorio
-            Bolsillo objeto = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
+            // creamos un objeto bolsillo aleatorio
+            Bolsillo objetoBolsillo = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
 
-            // Si hay un objeto, lo usamos
-            if (objeto != null) {
-                System.out.println("✨ Has sacado: " + objeto.getNombre());
-                System.out.println("📄 " + objeto.getDescripcion());
-                System.out.println("🗣️ " + objeto.getFrase());
+            // Comprobación: si se ha obtenido un objeto (no es null)
+            if (objetoBolsillo != null) {
+                // Mostramos información del objeto en consola
+                System.out.println("✨ Has sacado: " + objetoBolsillo.getNombre());
+                System.out.println("📄 " + objetoBolsillo.getDescripcion());
+                System.out.println("🗣️ " + objetoBolsillo.getFrase());
 
-                // Si hace daño, se lo restamos al enemigo
-                if (objeto.getDano() > 0) {
-                    int nuevaVida = enemigo.getVida() - objeto.getDano();
+                // Leemos el tipo del objeto 
+                String tipo = objetoBolsillo.getTipo();
 
-                    // Si la nueva vida es menor que 0, se deja en 0
-                    if (nuevaVida < 0) {
-                        nuevaVida = 0;
+                // Validamos que tipo no sea null para evitar errores
+                if (tipo != null) {
+
+                    // si es tipo daño: le quitamos vida al enemigo
+                    if (tipo.equalsIgnoreCase("dano")) {
+                        int nuevaVida = enemigo.getVida() - objetoBolsillo.getDano();
+                        if (nuevaVida < 0) {
+                            nuevaVida = 0; // Vida mínima es 0
+                        }
+                        enemigo.setVida(nuevaVida); // Aplicamos la nueva vida
+                        System.out.println("💥 El objeto causó " + objetoBolsillo.getDano() + " de daño al enemigo.");
+
+                    // si es tipo cura: el jugador recupera vida
+                    } else if (tipo.equalsIgnoreCase("cura")) {
+                        int vidaAntes = jugador.getVida(); // Guardamos la vida actual
+                        int vidaRecuperada = vidaAntes + objetoBolsillo.getDano();
+
+                        // comprobamos que la vida nunca supere la vida inicial
+                        if (vidaRecuperada > jugador.getVidaMax()) {
+                            vidaRecuperada = jugador.getVidaMax();
+                        }
+                        // Se aplica la curación
+                        jugador.setVida(vidaRecuperada); 
+                        System.out.println("❤️ Recuperas " + (vidaRecuperada - vidaAntes) + " puntos de vida.");
+
+                    // si es tipo robo: le quitamos vida al enemigo y se la damos al jugador
+                    } else if (tipo.equalsIgnoreCase("robo")) {
+                        int vidaRobada = objetoBolsillo.getDano();
+                        int vidaEnemigo = enemigo.getVida() - vidaRobada;
+
+                        // Si el enemigo tiene menos vida de la que queremos robar, ajustamos
+                        if (vidaEnemigo < 0) {
+                            // vidaEnemigo es negativa, se resta del robo
+                            vidaRobada += vidaEnemigo;  
+                            vidaEnemigo = 0;
+                        }
+                        // Restamos vida al enemigo
+                        enemigo.setVida(vidaEnemigo);
+
+                        int vidaJugador = jugador.getVida() + vidaRobada;
+
+                        // comprobamos que la vida nunca supere la vida inicial
+                        if (vidaJugador > jugador.getVidaMax()) {
+                            vidaJugador = jugador.getVidaMax();
+                        }
+                        // Sumamos vida al jugador
+                        jugador.setVida(vidaJugador); 
+                        System.out.println("🧛 Robas " + vidaRobada + " puntos de vida al enemigo.");
+
+                    // si es tipo troll: en vez de ayudar al jugador, ayuda al enemigo
+                    } else if (tipo.equalsIgnoreCase("troll")) {
+                        int vidaAntes = enemigo.getVida();
+                        int vidaRecuperada = vidaAntes + objetoBolsillo.getDano();
+
+                        // Limitamos al máximo de vida
+                        if (vidaRecuperada > enemigo.getVidaMax()) {
+                            vidaRecuperada = enemigo.getVidaMax();
+                        }
+
+                        enemigo.setVida(vidaRecuperada);
+                        System.out.println("😈 El enemigo recupera " + (vidaRecuperada - vidaAntes) + " puntos de vida gracias al objeto troll.");
+
+                    // Si el tipo del objeto no es reconocido
+                    } else {
+                        System.out.println("🔮 El objeto no tiene un efecto definido.");
                     }
 
-                    enemigo.setVida(nuevaVida);
-                    System.out.println("💥 El objeto causó " + objeto.getDano() + " de daño al enemigo.");
+                } else {
+                    // El tipo es null, no se puede usar el objeto correctamente
+                    System.out.println("🔮 El objeto no tiene un tipo definido.");
                 }
 
             } else {
-                // Si no hay objeto
+                // Si no se obtuvo ningún objeto del bolsillo
                 System.out.println("🔮 El bolsillo está vacío.");
             }
 
         } catch (Exception e) {
+            // Si hubo un error (por ejemplo, no se pudo acceder a la base de datos)
             System.out.println("Error al usar el bolsillo mágico: " + e.getMessage());
         }
     }
+
+
 
 
  // El jugador usa un objeto de su mochila para curarse

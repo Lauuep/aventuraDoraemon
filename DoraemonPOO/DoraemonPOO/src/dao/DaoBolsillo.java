@@ -19,19 +19,20 @@ public class DaoBolsillo {
     }
 
     public Bolsillo obtenerObjetoAleatorio() {
-        String sql = "SELECT * FROM bolsillo ORDER BY RAND() LIMIT 1";
-
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    	
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM bolsillo ORDER BY RAND() LIMIT 1");
+             ResultSet rs = stmt.executeQuery()) {
 
             if (rs.next()) {
-                Bolsillo obj = new Bolsillo();
-                obj.setId(rs.getInt("id"));
-                obj.setNombre(rs.getString("nombre"));
-                obj.setDescripcion(rs.getString("descripcion"));
-                obj.setDano(rs.getInt("dano"));
-                obj.setFrase(rs.getString("frase"));
-                return obj;
+                Bolsillo objetoBolsillo = new Bolsillo();
+                objetoBolsillo.setId(rs.getInt("id"));
+                objetoBolsillo.setNombre(rs.getString("nombre"));
+                objetoBolsillo.setDescripcion(rs.getString("descripcion"));
+                objetoBolsillo.setDano(rs.getInt("dano"));
+                objetoBolsillo.setFrase(rs.getString("frase"));
+                objetoBolsillo.setTipo(rs.getString("tipo"));
+                
+                return  objetoBolsillo;
             }
 
         } catch (SQLException e) {

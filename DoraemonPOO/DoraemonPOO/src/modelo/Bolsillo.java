@@ -6,16 +6,18 @@ public class Bolsillo {
 	private String descripcion;
 	private int dano;
 	private String frase;
+	private String tipo;
 	
 	public Bolsillo () {
 		
 	}
 	
-	public Bolsillo (String nombre, String descripcion, int dano, String frase) {
+	public Bolsillo (String nombre, String descripcion, int dano, String frase, String tipo) {
 		this.nombre=nombre;
 		this.descripcion=descripcion;
 		this.dano=dano;
 		this.frase=frase;
+		this.tipo=tipo;
 	}
 
 	public int getId() {
@@ -56,6 +58,14 @@ public class Bolsillo {
 
 	public void setFrase(String frase) {
 		this.frase = frase;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 	
