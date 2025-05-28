@@ -47,4 +47,13 @@ public class DoaMochila {
 
         return lista;
     }
+    
+    public void restarCantidadObjeto(int personajeId, int objetoId) throws SQLException {
+        String sql = "UPDATE mochila SET cantidad = cantidad - 1 WHERE id_personaje = ? AND id_objeto = ? AND cantidad > 0";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, personajeId);
+        ps.setInt(2, objetoId);
+        ps.executeUpdate();
+    }
+    
 }
