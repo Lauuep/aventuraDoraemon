@@ -247,7 +247,13 @@ public class Batalla {
 
                 // Si hace daño, se lo restamos al enemigo
                 if (objeto.getDano() > 0) {
-                    int nuevaVida = Math.max(0, enemigo.getVida() - objeto.getDano());
+                    int nuevaVida = enemigo.getVida() - objeto.getDano();
+
+                    // Si la nueva vida es menor que 0, se deja en 0
+                    if (nuevaVida < 0) {
+                        nuevaVida = 0;
+                    }
+
                     enemigo.setVida(nuevaVida);
                     System.out.println("💥 El objeto causó " + objeto.getDano() + " de daño al enemigo.");
                 }
@@ -261,6 +267,7 @@ public class Batalla {
             System.out.println("Error al usar el bolsillo mágico: " + e.getMessage());
         }
     }
+
 
  // El jugador usa un objeto de su mochila para curarse
     private void usarObjetoDeMochila() {
