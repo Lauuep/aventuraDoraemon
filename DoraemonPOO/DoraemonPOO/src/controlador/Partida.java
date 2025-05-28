@@ -231,13 +231,3 @@ public class Partida {
 
 
 }
-/*
- * 
- * danoExtra=random((5)+1);
- * danoExtratotal=
- * 
- * if(danoExtra>0){
- * vida
- * 
- * 
- * */
