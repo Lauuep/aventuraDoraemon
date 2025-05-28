@@ -138,10 +138,15 @@ public class Juego {
 				+ "Este cristal es capaz de limpiar pequeñas áreas de agua y restaurar el ecosistema.\n"
 				+ "Es decir, hace que las aguas vuelvan  a ser transparentes y seguras para los peces koi.";
 	}
-	public void irfukuota() {
+	public void irfukuota(int fallos) {
 		ifoFoko();
 		
-		jugarBarquitos(null,null, 0);
+		jugarBarquitos();
+		
+		
+		if(fallos>5) {
+			
+		}
 		
 		//batalla pequeña
 	}
