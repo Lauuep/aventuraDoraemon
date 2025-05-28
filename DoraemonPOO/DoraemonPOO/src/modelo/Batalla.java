@@ -19,6 +19,7 @@ public class Batalla {
     private MomentoDia momentoActual;
     
 
+ // Constructor: se crea la batalla con el jugador y el enemigo
     public Batalla(Personaje jugador, Personaje enemigo) {
         this.jugador = jugador;
         this.enemigo = enemigo;
@@ -27,6 +28,7 @@ public class Batalla {
         
     }
      
+ // Generar clima aleatorio
     private Clima generarClimaAleatorio() {
     	int numero = random.nextInt(4); // 0, 1, 2 o 3
         Clima climaAleatorio;
@@ -44,7 +46,7 @@ public class Batalla {
         return climaAleatorio;
     }
 
-
+ // Generar momento del día aleatorio
     private MomentoDia generarMomentoAleatorio() {
         int numero = random.nextInt(3); // 0, 1 o 2
         MomentoDia momento;
@@ -60,7 +62,7 @@ public class Batalla {
         return momento;
     }
 
-
+ // Empieza el combate, devuelve true si gana el jugador
     public boolean iniciarCombate() {
     	
     	boolean resultadoBatalla=false;
@@ -70,7 +72,7 @@ public class Batalla {
         boolean turnoJugador = true;
 
         while (jugador.getVida() > 0 && enemigo.getVida() > 0) {
-            if (turnoJugador) {
+            if (turnoJugador==true) {
                 turnoDelJugador();
             } else {
                 turnoDelEnemigo();
@@ -90,130 +92,169 @@ public class Batalla {
     }
 
     private void turnoDelJugador() {
-        if (jugador.getVida() <= 0) {
-            System.out.println("⚠️ No puedes hacer nada, estás sin vida.");
-            return;
-        }
-
-        System.out.println("\n🎮 Tu turno. Elige una opción:");
+        System.out.println("\n\ud83c\udfae Tu turno. Elige una opción:");
         System.out.println("1. Atacar");
         System.out.println("2. Usar bolsillo mágico");
         System.out.println("3. Usar objeto de la mochila");
 
         int opcion = sc.nextInt();
 
-        switch (opcion) {
-            case 1:
-                realizarAtaque(jugador, enemigo);
-                break;
-            case 2:
-                usarBolsilloMagico();
-                break;
-            case 3:
-                usarObjetoDeMochila();
-                break;
-            default:
-                System.out.println("❌ Opción no válida.");
+        if (jugador.getVida() > 0) {
+            switch (opcion) {
+                case 1:
+                    realizarAtaque(jugador, enemigo);
+                    break;
+                case 2:
+                    usarBolsilloMagico();
+                    break;
+                case 3:
+                    usarObjetoDeMochila();
+                    break;
+                default:
+                    System.out.println("\u274c Opción no válida.");
+            }
+        } else {
+            System.out.println("\u26a0\ufe0f No puedes hacer nada, estás sin vida.");
         }
     }
-
+    
     private void turnoDelEnemigo() {
-        if (enemigo.getVida() <= 0) {
-            System.out.println("❌ El enemigo ya no puede atacar.");
-        } else {
-            System.out.println("\n🤖 Turno de " + enemigo.getNombre());
+        if (enemigo.getVida() > 0) {
+            System.out.println("\n\ud83e\udd16 Turno de " + enemigo.getNombre());
             realizarAtaque(enemigo, jugador);
+        } else {
+            System.out.println("\u274c El enemigo ya no puede atacar.");
         }
     }
 
     private void realizarAtaque(Personaje atacante, Personaje receptor) {
         ArrayList<Ataque> ataques = atacante.getAtaques();
 
-        if (ataques == null || ataques.isEmpty()) {
-            System.out.println(atacante.getNombre() + " no tiene ataques.");
-            return;
-        }
+        // Solo hacemos el ataque si tiene ataques disponibles
+        if (ataques != null && !ataques.isEmpty()) {
 
         Ataque ataque;
+        //Si el que ataca es el jugador, se deja elegir el ataque.
         if (atacante == jugador) {
             ataque = seleccionarAtaqueJugador(ataques);
         } else {
+        	//Si es el enemigo, se elige uno al azar de su lista.
             ataque = ataques.get(random.nextInt(ataques.size()));
         }
-
+        
+        
+        // Guardamos el daño base del ataque
         int baseDano = ataque.getDano();
-        int impacto = random.nextInt(4);
-        int danoFinal;
+        int danoFinal = baseDano;
 
+        // Comprobamos si hay "viento raro" que ignora condiciones
+        // Hay un 20% de probabilidad de que aparezca, siendo solo viento raro el numero 0
+        int numeroAleatorio = random.nextInt(5); // Número entre 0 y 4
+        boolean hayVientoRaro=false;
+        if (numeroAleatorio==0) {
+        	hayVientoRaro=true;
+        } else {
+        	hayVientoRaro=false;
+        }
+       
+        
+        // Si no hay viento raro, aplicamos modificadores por clima y momento del día
+        if (hayVientoRaro==false) {
+            // Clima afecta el daño
+            if (climaActual == Clima.LLUVIA) {
+                danoFinal -= 1;
+                System.out.println("🌧️ La lluvia reduce el daño (-1).");
+            } else if (climaActual == Clima.NIEVE) {
+                danoFinal -= 2;
+                System.out.println("❄️ La nieve reduce mucho el daño (-2).");
+            } else {
+                System.out.println("🌤️ El clima no afecta.");
+            }
+
+            // Si es de noche, se aumenta el daño
+            if (momentoActual == MomentoDia.NOCHE) {
+                danoFinal += 2;
+                System.out.println("🌙 La noche potencia el ataque (+2).");
+            }
+        } else {
+            // Si hay viento raro, las condiciones no se aplican
+            System.out.println("🌪️ Viento raro: las condiciones se ignoran.");
+        }
+        
+
+        // Impacto del golpe (azar): 0 = fallo, 1 = leve, 2 = normal, 3 = crítico
+        int impacto = random.nextInt(4);
         if (impacto == 0) {
             danoFinal = 0;
             System.out.println("❌ ¡Ataque fallido! No hizo daño.");
         } else if (impacto == 1) {
-            danoFinal = baseDano / 2;
+            danoFinal /= 2;
             System.out.println("🩹 El ataque solo te roza. Daño reducido.");
         } else if (impacto == 2) {
-            danoFinal = baseDano;
             System.out.println("💥 Te da de lleno. Daño normal.");
         } else {
-            danoFinal = baseDano * 2;
+            danoFinal *= 2;
             System.out.println("🔥 ¡Golpe crítico! Doble daño.");
         }
 
-        // Modificadores por clima
-        if (climaActual == Clima.LLUVIA) {
-            danoFinal = danoFinal - 1;
-            System.out.println("🌧️ La lluvia reduce el daño del ataque (-1).");
-        } else if (climaActual == Clima.NIEVE) {
-            danoFinal =- 2;
-            System.out.println("❄️ La nieve reduce mucho el daño del ataque (-2).");
-        }else if (climaActual == Clima.DESPEJADO && climaActual == Clima.NUBLADO) {
-        	System.out.println("La climatologia no afecta al ataque.");
-        }
-
-        // Modificadores por momento del día
-        if (momentoActual == MomentoDia.NOCHE) {
-            danoFinal += 2;
-            System.out.println("🌙 La noche potencia el ataque (+2).");
-        }
-
+     // Aplicamos el daño final al personaje que recibe el ataque
         aplicarDanyo(receptor, danoFinal);
 
+        // Mensaje con información del ataque
         System.out.println(atacante.getNombre() + " usó " + ataque.getNombre() + " e hizo " + danoFinal + " de daño.");
-        System.out.println("❤️ Vida de " + jugador.getNombre() + ": " + jugador.getVida() + "/" + jugador.getVidaMax());
-        System.out.println("💀 Vida de " + enemigo.getNombre() + ": " + enemigo.getVida() + "/" + enemigo.getVidaMax());
+        System.out.println("❤️ Vida de " + jugador.getNombre() + ": " + jugador.getVida());
+        System.out.println("💀 Vida de " + enemigo.getNombre() + ": " + enemigo.getVida());
+        } else {
+        // Si no tiene ataques, mostramos un mensaje
+        System.out.println(atacante.getNombre() + " no tiene ataques disponibles.");
+        }
+        
     }
 
+    //seleccionar ataque al juagador
     private Ataque seleccionarAtaqueJugador(ArrayList<Ataque> ataques) {
         System.out.println("Elige tu ataque:");
+        
+     // Mostramos la lista de ataques
         for (int i = 0; i < ataques.size(); i++) {
             Ataque a = ataques.get(i);
             System.out.println((i + 1) + ". " + a.getNombre() + " (Daño: " + a.getDano() + ")");
         }
 
+        // El jugador elige el ataque
         int seleccion = sc.nextInt() - 1;
+
+        // Si se pasa de rango, se elige el primero
         if (seleccion < 0 || seleccion >= ataques.size()) {
             System.out.println("❌ Selección inválida. Se usará el primer ataque.");
-            return ataques.get(0);
+            seleccion = 0;
         }
 
         return ataques.get(seleccion);
     }
 
+ // Usa un objeto aleatorio del bolsillo mágico
     private void usarBolsilloMagico() {
         try {
-            Bolsillo objetoBolsillo = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
-            if (objetoBolsillo == null) {
+            // Sacamos un objeto aleatorio
+            Bolsillo objeto = DaoBolsillo.getInstance().obtenerObjetoAleatorio();
+
+            // Si hay un objeto, lo usamos
+            if (objeto != null) {
+                System.out.println("✨ Has sacado: " + objeto.getNombre());
+                System.out.println("📄 " + objeto.getDescripcion());
+                System.out.println("🗣️ " + objeto.getFrase());
+
+                // Si hace daño, se lo restamos al enemigo
+                if (objeto.getDano() > 0) {
+                    int nuevaVida = Math.max(0, enemigo.getVida() - objeto.getDano());
+                    enemigo.setVida(nuevaVida);
+                    System.out.println("💥 El objeto causó " + objeto.getDano() + " de daño al enemigo.");
+                }
+
+            } else {
+                // Si no hay objeto
                 System.out.println("🔮 El bolsillo está vacío.");
-                return;
-            }
-
-            System.out.println("✨ Has sacado: " + objetoBolsillo.getNombre());
-            System.out.println("📝 " + objetoBolsillo.getDescripcion());
-            System.out.println("💬 " + objetoBolsillo.getFrase());
-
-            if (objetoBolsillo.getDano() > 0) {
-                enemigo.setVida(Math.max(0, enemigo.getVida() - objetoBolsillo.getDano()));
-                System.out.println("💥 El objeto causó " + objetoBolsillo.getDano() + " de daño al enemigo.");
             }
 
         } catch (Exception e) {
@@ -221,39 +262,55 @@ public class Batalla {
         }
     }
 
+ // El jugador usa un objeto de su mochila para curarse
     private void usarObjetoDeMochila() {
         try {
+            // Cargamos los objetos de la mochila
             ArrayList<Objeto> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
-            if (mochila == null || mochila.isEmpty()) {
+
+            // Si hay objetos en la mochila
+            if (mochila != null && !mochila.isEmpty()) {
+                System.out.println("📦 Objetos disponibles:");
+
+                // Mostramos los objetos
+                for (int i = 0; i < mochila.size(); i++) {
+                    Objeto o = mochila.get(i);
+                    System.out.println((i + 1) + ". " + o.getNombre() + " - " + o.getDescripcion() + " (Poder: " + o.getPoder() + ")");
+                }
+
+                // Pedimos la selección
+                System.out.print("Elige un objeto: ");
+                int seleccion = sc.nextInt() - 1;
+
+                // Si es válida, se usa el objeto
+                if (seleccion >= 0 && seleccion < mochila.size()) {
+                    Objeto objeto = mochila.get(seleccion);
+                    int vidaActual = jugador.getVida();
+                    int vidaRecuperada = Math.min(vidaActual + objeto.getPoder(), jugador.getVidaMax());
+                    jugador.setVida(vidaRecuperada);
+                    System.out.println("❤️ Recuperas " + (vidaRecuperada - vidaActual) + " de vida.");
+                } else {
+                    System.out.println("❌ Selección inválida.");
+                }
+
+            } else {
                 System.out.println("👜 Tu mochila está vacía.");
-                return;
             }
 
-            System.out.println("📦 Objetos disponibles:");
-            for (int i = 0; i < mochila.size(); i++) {
-                Objeto o = mochila.get(i);
-                System.out.println((i + 1) + ". " + o.getNombre() + " - " + o.getDescripcion() + " (Poder: " + o.getPoder() + ")");
-            }
-
-            System.out.print("Elige un objeto: ");
-            int seleccion = sc.nextInt() - 1;
-
-            if (seleccion < 0 || seleccion >= mochila.size()) {
-                System.out.println("❌ Selección inválida.");
-                return;
-            }
-
-            Objeto objeto = mochila.get(seleccion);
-            int nuevaVida = Math.min(jugador.getVida() + objeto.getPoder(), jugador.getVidaMax());
-            System.out.println("❤️ Recuperas " + (nuevaVida - jugador.getVida()) + " puntos de vida.");
-            jugador.setVida(nuevaVida);
         } catch (Exception e) {
             System.out.println("Error al acceder a la mochila: " + e.getMessage());
         }
     }
 
+ // Aplica daño a un personaje, sin que la vida baje de 0
     private void aplicarDanyo(Personaje objetivo, int dano) {
-        int nuevaVida = Math.max(0, objetivo.getVida() - dano);
+        int nuevaVida = objetivo.getVida() - dano;
+
+        // Si la nueva vida es menor que 0, se deja en 0
+        if (nuevaVida < 0) {
+            nuevaVida = 0;
+        }
+
         objetivo.setVida(nuevaVida);
     }
 
