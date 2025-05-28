@@ -26,15 +26,38 @@ public class Batalla {
         this.momentoActual = generarMomentoAleatorio();
         
     }
-    
+     
     private Clima generarClimaAleatorio() {
-        Clima[] climas = Clima.values();
-        return climas[random.nextInt(climas.length)];
+    	int numero = random.nextInt(4); // 0, 1, 2 o 3
+        Clima climaAleatorio;
+
+        if (numero == 0) {
+            climaAleatorio = Clima.DESPEJADO;
+        } else if (numero == 1) {
+            climaAleatorio = Clima.LLUVIA;
+        } else if (numero == 2) {
+            climaAleatorio = Clima.NUBLADO;
+        } else {
+            climaAleatorio = Clima.NIEVE;
+        }
+
+        return climaAleatorio;
     }
 
+
     private MomentoDia generarMomentoAleatorio() {
-        MomentoDia[] momentos = MomentoDia.values();
-        return momentos[random.nextInt(momentos.length)];
+        int numero = random.nextInt(3); // 0, 1 o 2
+        MomentoDia momento;
+
+        if (numero == 0) {
+            momento = MomentoDia.MANANA;
+        } else if (numero == 1) {
+            momento = MomentoDia.TARDE;
+        } else {
+            momento = MomentoDia.NOCHE;
+        }
+
+        return momento;
     }
 
 
@@ -143,7 +166,7 @@ public class Batalla {
         } else if (climaActual == Clima.NIEVE) {
             danoFinal =- 2;
             System.out.println("❄️ La nieve reduce mucho el daño del ataque (-2).");
-        }else if (climaActual == Clima.DESPEJADO && climaActual == Clima.NUBOSO) {
+        }else if (climaActual == Clima.DESPEJADO && climaActual == Clima.NUBLADO) {
         	System.out.println("La climatologia no afecta al ataque.");
         }
 
