@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="DoraemonPOO/src"/>
 	<classpathentry kind="lib" path="C:/Users/And/DAM/programacion/librerias/mysql-connector-j-9.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/myria/Desktop/libreria/mysql-connector-j-9.3.0.jar"/>
 	<classpathentry kind="output" path="DoraemonPOO/bin"/>
 </classpath>
