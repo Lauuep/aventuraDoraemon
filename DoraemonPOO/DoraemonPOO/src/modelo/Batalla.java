@@ -339,7 +339,7 @@ public class Batalla {
     private void usarObjetoDeMochila() {
         try {
             // Cargamos los objetos de la mochila
-            ArrayList<Objeto> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
+            ArrayList<Mochila> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
 
             // Si hay objetos en la mochila
             if (mochila != null && !mochila.isEmpty()) {
@@ -347,7 +347,7 @@ public class Batalla {
 
                 // Mostramos los objetos
                 for (int i = 0; i < mochila.size(); i++) {
-                    Objeto o = mochila.get(i);
+                    Mochila o = mochila.get(i);
                     System.out.println((i + 1) + ". " + o.getNombre() + " - " + o.getDescripcion() + " (Poder: " + o.getPoder() + ")");
                 }
 
@@ -357,7 +357,7 @@ public class Batalla {
 
                 // Si es válida, se usa el objeto
                 if (seleccion >= 0 && seleccion < mochila.size()) {
-                    Objeto objeto = mochila.get(seleccion);
+                    Mochila objeto = mochila.get(seleccion);
                     int vidaActual = jugador.getVida();
                     int vidaRecuperada = Math.min(vidaActual + objeto.getPoder(), jugador.getVidaMax());
                     jugador.setVida(vidaRecuperada);

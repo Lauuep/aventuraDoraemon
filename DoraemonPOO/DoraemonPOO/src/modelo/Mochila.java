@@ -1,17 +1,17 @@
 package modelo;
 
-public class Objeto {
+public class Mochila {
 	private int id;
     private String nombre;
     private String descripcion;
     private int poder;
     private int cantidad;
 
-    public Objeto () {
+    public Mochila () {
     	
     }
 
-    public Objeto(String nombre, String descrpcion, int poder, int cantidad) {
+    public Mochila(String nombre, String descrpcion, int poder, int cantidad) {
         this.nombre = nombre;
         this.descripcion=descripcion;
         this.poder=poder;
