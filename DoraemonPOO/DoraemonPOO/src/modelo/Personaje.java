@@ -67,11 +67,11 @@ public class Personaje {
 	
 
 	public ArrayList<Mochila> getMochila() {
-		return mochila;
+	    return mochila;
 	}
 
 	public void setMochila(ArrayList<Mochila> mochila) {
-		this.mochila = mochila;
+	    this.mochila = mochila;
 	}
 	
     public String getTipo() {

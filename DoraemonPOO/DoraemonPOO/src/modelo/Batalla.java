@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import java.util.Random;
 import java.util.Scanner;
-
 import dao.DoaMochila;
 import dao.DaoBolsillo;
 
@@ -333,40 +332,59 @@ public class Batalla {
     }
 
 
-
-
- // El jugador usa un objeto de su mochila para curarse
     private void usarObjetoDeMochila() {
         try {
-            // Cargamos los objetos de la mochila
+            // Obtenemos la mochila del jugador con todos los objetos
             ArrayList<Mochila> mochila = DoaMochila.getInstance().obtenerObjetosDeMochila(jugador.getId());
 
-            // Si hay objetos en la mochila
-            if (mochila != null && !mochila.isEmpty()) {
+            // Comprobamos si la mochila tiene objetos
+            if (mochila != null && mochila.size() > 0) {
                 System.out.println("📦 Objetos disponibles:");
 
-                // Mostramos los objetos
+                // Mostramos cada objeto con su cantidad
                 for (int i = 0; i < mochila.size(); i++) {
-                    Mochila o = mochila.get(i);
-                    System.out.println((i + 1) + ". " + o.getNombre() + " - " + o.getDescripcion() + " (Poder: " + o.getPoder() + ")");
+                    Mochila objeto = mochila.get(i);
+                    System.out.println((i + 1) + ". " + objeto.getNombre() + " - " + objeto.getDescripcion() +
+                            " (Poder: " + objeto.getPoder() + ", Cantidad: " + objeto.getCantidad() + ")");
                 }
 
-                // Pedimos la selección
+                // Pedimos al jugador que elija un objeto
                 System.out.print("Elige un objeto: ");
                 int seleccion = sc.nextInt() - 1;
 
-                // Si es válida, se usa el objeto
+                // Comprobamos si la selección está en el rango
                 if (seleccion >= 0 && seleccion < mochila.size()) {
-                    Mochila objeto = mochila.get(seleccion);
-                    int vidaActual = jugador.getVida();
-                    int vidaRecuperada = Math.min(vidaActual + objeto.getPoder(), jugador.getVidaMax());
-                    jugador.setVida(vidaRecuperada);
-                    System.out.println("❤️ Recuperas " + (vidaRecuperada - vidaActual) + " de vida.");
+                    Mochila objetoSeleccionado = mochila.get(seleccion);
+
+                    // Comprobamos si el jugador tiene al menos 1 unidad del objeto
+                    if (objetoSeleccionado.getCantidad() > 0) {
+                        // Calculamos la vida a recuperar
+                        int vidaActual = jugador.getVida();
+                        int vidaRecuperada = vidaActual + objetoSeleccionado.getPoder();
+
+                        // Si la nueva vida supera el máximo, se ajusta al máximo permitido
+                        if (vidaRecuperada > jugador.getVidaMax()) {
+                            vidaRecuperada = jugador.getVidaMax();
+                        }
+
+                        // Aplicamos la nueva vida
+                        jugador.setVida(vidaRecuperada);
+
+                        // Restamos una unidad del objeto en la base de datos
+                        DoaMochila.getInstance().restarCantidadObjeto(jugador.getId(), objetoSeleccionado.getId());
+
+                        // Mostramos lo que ha recuperado
+                        System.out.println("❤️ Recuperas " + (vidaRecuperada - vidaActual) + " puntos de vida.");
+                    } else {
+                        // El jugador no tiene unidades suficientes
+                        System.out.println("❌ No tienes unidades suficientes de este objeto.");
+                    }
                 } else {
+                    // La selección no está dentro del rango
                     System.out.println("❌ Selección inválida.");
                 }
-
             } else {
+                // No hay objetos en la mochila
                 System.out.println("👜 Tu mochila está vacía.");
             }
 
@@ -374,6 +392,8 @@ public class Batalla {
             System.out.println("Error al acceder a la mochila: " + e.getMessage());
         }
     }
+
+
 
  // Aplica daño a un personaje, sin que la vida baje de 0
     private void aplicarDanyo(Personaje objetivo, int dano) {

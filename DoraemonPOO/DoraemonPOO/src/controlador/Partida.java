@@ -12,6 +12,7 @@ import dao.DaoAtaque;
 import dao.DaoLogin;
 import dao.DaoAtaque;
 import dao.DaoPersonaje;
+import dao.DoaMochila;
 import modelo.Ataque;
 import modelo.Batalla;
 import modelo.Login;
@@ -153,6 +154,7 @@ public class Partida {
         
         //llave de acceso a los metodos de Dao Personaje
         DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
+        
         DaoAtaque daoAtaque = DaoAtaque.getInstance();
 
         // Buscar un enemigo según el personaje elegido
@@ -184,7 +186,7 @@ public class Partida {
     private static void seleccionarPersonaje() throws SQLException {
         Scanner sc = new Scanner(System.in);
         
-        //llave de acceso a los metodos de DaoPersonaje y DaoAtaque
+        // llave de acceso a los métodos de DaoPersonaje y DaoAtaque
         DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
         DaoAtaque daoAtaque = DaoAtaque.getInstance();
 
@@ -201,7 +203,7 @@ public class Partida {
         System.out.print("🔍 Escribe el ID del personaje que quieres usar: ");
         int idElegido = sc.nextInt();
 
-        //Almacenamos en protagonista la id del person
+        // Almacenamos en protagonista la id del personaje
         protagonista = daoPersonaje.seleccionarPersonaje(idElegido);
 
         // Validar selección
@@ -216,12 +218,16 @@ public class Partida {
         ArrayList<Ataque> ataques = (ArrayList<Ataque>) daoAtaque.obtenerAtaquesDePersonaje(protagonista.getId());
         protagonista.setAtaques(ataques);
 
+        // Creamos una mochila para el personaje (una vez validado que no es null)
+        protagonista.setMochila(DoaMochila.getInstance().obtenerObjetosDeMochila(protagonista.getId()));
+
         System.out.println("\n⚔️ Ataques disponibles:");
         for (int i = 0; i < ataques.size(); i++) {
             Ataque a = ataques.get(i);
             System.out.println((i + 1) + ". " + a.getNombre() + ": " + a.getDescripcion() + " (Daño: " + a.getDano() + ")");
         }
     }
+
 
 
 }
