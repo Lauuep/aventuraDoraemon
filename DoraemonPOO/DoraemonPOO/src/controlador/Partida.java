@@ -16,6 +16,7 @@ import dao.DoaMochila;
 import modelo.Ataque;
 import modelo.Batalla;
 import modelo.Login;
+import modelo.Lugares;
 import modelo.Personaje;
 
 public class Partida {
@@ -182,20 +183,16 @@ public class Partida {
 
         // Resultado de la batalla
         if (ganoBatalla) {
+        	System.out.println("fuck!!");
             System.out.println("✅ ¡Ganaste! " + protagonista.getNombre() + " continúa la aventura.");
+            Lugares lugarElegido = elegirLugarMortal();
+            System.out.println("doble fuck!!");
+            
         } else {
             System.out.println("💀 Has sido derrotado. Fin del juego.");
         }
         
-       //1era ELECCION LUGAR NO MORTAL
-        
-        //2do RANDOM LUGAR MORTAL
-        
-        //3er ELECCION LUGAR NO MORTAL
-        
-        //BATALLA FINAL
-        
-        //FINAL 
+     
         
     }
 
@@ -244,7 +241,70 @@ public class Partida {
             System.out.println((i + 1) + ". " + a.getNombre() + ": " + a.getDescripcion() + " (Daño: " + a.getDano() + ")");
         }
     }
+    
+    
+    private static Lugares elegirLugarMortal() throws SQLException {
+        System.out.println("DEBUG → Entrando a elegirLugarMortal()");
+        DaoLugares daoLugares = DaoLugares.getInstance();
+        ArrayList<Lugares> lugaresMortales = daoLugares.obtenerDosLugaresMortalesAleatorios();
 
+        System.out.println("DEBUG → Total lugares encontrados: " + lugaresMortales.size());
+
+        if (lugaresMortales.size() < 2) {
+            System.out.println("⚠️ No hay suficientes lugares mortales disponibles.");
+            return null;
+        }
+
+        System.out.println("\n💀 Elige un lugar peligroso para continuar:");
+        for (int i = 0; i < lugaresMortales.size(); i++) {
+            Lugares l = lugaresMortales.get(i);
+            System.out.println((i + 1) + ". " + l.getNombre() + " - " + l.getRecompensa());
+        }
+
+        int eleccion = 0;
+        while (eleccion < 1 || eleccion > 2) {
+            System.out.print("Selecciona una opción (1 o 2): ");
+            eleccion = sc.nextInt();
+        }
+
+        Lugares elegido = lugaresMortales.get(eleccion - 1);
+        daoLugares.eliminarLugarPorId(elegido.getId());
+        System.out.println("📍 Has elegido ir a: " + elegido.getNombre());
+
+        return elegido;
+    }
+
+    
+    /*
+    
+    private static Lugares elegirLugarMortal() throws SQLException {
+        DaoLugares daoLugares = DaoLugares.getInstance();
+        ArrayList<Lugares> lugaresMortales = daoLugares.obtenerDosLugaresMortalesAleatorios();
+
+        if (lugaresMortales.size() < 2) {
+            System.out.println("⚠️ No hay suficientes lugares mortales disponibles.");
+            return null;
+        }
+
+        System.out.println("\n💀 Elige un lugar peligroso para continuar:");
+        for (int i = 0; i < lugaresMortales.size(); i++) {
+            System.out.println((i + 1) + ". " + lugaresMortales.get(i).getNombre() + " - ");
+        }
+
+        int eleccion = 0;
+        while (eleccion < 1 || eleccion > 2) {
+            System.out.print("Selecciona una opción (1 o 2): ");
+            eleccion = sc.nextInt();
+        }
+
+        Lugares elegido = lugaresMortales.get(eleccion - 1);
+        daoLugares.eliminarLugarPorId(elegido.getId());
+        System.out.println("📍 Has elegido ir a: " + elegido.getNombre());
+
+        return elegido;
+    }
+
+*/
 
 
 }
