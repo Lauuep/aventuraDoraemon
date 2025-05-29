@@ -11,7 +11,7 @@ public class Personaje {
     private int vida;
     private int vidaMax;
     private ArrayList<Ataque> ataques;
-    private ArrayList<Objeto> mochila;
+    private ArrayList<Mochila> mochila;
     private int lugarId;
     private int puntos;
 
@@ -19,7 +19,7 @@ public class Personaje {
     	
     }
 
-    public Personaje(String nombre, int vida, int vidaMax, Ataque ataques, Objeto mochila) {
+    public Personaje(String nombre, int vida, int vidaMax, Ataque ataques, Mochila mochila) {
         this.nombre = nombre;
         this.vida = vida;
         this.vidaMax = vidaMax;
@@ -66,12 +66,12 @@ public class Personaje {
 		}
 	
 
-	public ArrayList<Objeto> getMochila() {
-		return mochila;
+	public ArrayList<Mochila> getMochila() {
+	    return mochila;
 	}
 
-	public void setMochila(ArrayList<Objeto> mochila) {
-		this.mochila = mochila;
+	public void setMochila(ArrayList<Mochila> mochila) {
+	    this.mochila = mochila;
 	}
 	
     public String getTipo() {
@@ -90,7 +90,7 @@ public class Personaje {
 		this.lugarId = lugarId;
 	}
 
-	public void agregarObjeto(Objeto objeto) {
+	public void agregarObjeto(Mochila objeto) {
         mochila.add(objeto);
     }
 

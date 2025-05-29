@@ -3,7 +3,7 @@ package dao;
 import modelo.Personaje;
 import modelo.Ataque;
 import modelo.Enemigo;
-import modelo.Objeto;
+import modelo.Mochila;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,56 +26,66 @@ public class DaoPersonaje {
         return instance;
     }
     
- // Actualizar personaje por nombre
-    public boolean actualizarPersonaje(Personaje personaje) {
-        String sql = "UPDATE personaje SET vida = ? WHERE nombre = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, personaje.getVida());
-            int filas = stmt.executeUpdate();
-            return filas > 0;
-
-        } catch (SQLException e) {
-            System.out.println("Error al actualizar personaje: " + e.getMessage());
-            return false;
-        }
-    }
      
     public ArrayList<Personaje> mostrarPersonajesPrincipales() throws SQLException {
-        ArrayList<Personaje> personajes = new ArrayList<>();
-        String query = "SELECT id, nombre FROM personajes WHERE tipo = 'principal'";
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
+        // Creamos un ArrayList
+        ArrayList<Personaje> listaPersonajes = new ArrayList<>();
 
-        while (rs.next()) {
-            Personaje p = new Personaje();
-            p.setId(rs.getInt("id"));
-            p.setNombre(rs.getString("nombre"));
-            personajes.add(p);
+        // Consulta SQL: selecciona los personajes que son principales
+        String consulta = "SELECT id, nombre FROM personajes WHERE tipo = 'principal'";
+
+        // Creamos el objeto para ejecutar la consulta
+        Statement stmt = conn.createStatement();
+        // Ejecutamos la consulta y guardamos el resultado
+        ResultSet resultado = stmt.executeQuery(consulta);
+
+        // Recorremos el resultado fila por fila
+        while (resultado.next()) {
+        	// Creamos un personaje vacío
+            Personaje personaje = new Personaje();
+
+            // Rellenamos los datos del personaje
+            personaje.setId(resultado.getInt("id"));
+            personaje.setNombre(resultado.getString("nombre"));
+
+            // Añadimos el personaje a la lista
+            listaPersonajes.add(personaje);
         }
 
-        return personajes;
+        // Devolvemos la lista completa
+        return listaPersonajes;
     }
-        
-    
-    
- // Obtener un personaje por su ID
-    public Personaje seleccionarPersonaje(int id) throws SQLException {
-        Personaje personaje = null;
-   
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM personajes WHERE id = ?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
+  
 
-            if (rs.next()) {
-                personaje = new Personaje();
-                personaje.setId(rs.getInt("id"));
-                personaje.setNombre(rs.getString("nombre"));
-                personaje.setVida(rs.getInt("vida"));
-            }
+    
+ // Método que busca y devuelve un personaje por su ID
+    public Personaje seleccionarPersonaje(int idBuscado) throws SQLException {
+        // Creamos una variable vacía para guardar el personaje si lo encontramos
+        Personaje personajeSeleccionado = null;
 
-        return personaje;
+        // Creamos la consulta SQL
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM personajes WHERE id = ?");
+
+        // Reemplazamos el "?" con el ID recibido como parámetro
+        stmt.setInt(1, idBuscado);
+
+        // Ejecutamos la consulta
+        ResultSet rs = stmt.executeQuery();
+
+        // Si se encontró un personaje con ese ID
+        if (rs.next()) {
+            personajeSeleccionado = new Personaje();
+
+            // Rellenamos los datos del personaje
+            personajeSeleccionado.setId(rs.getInt("id"));
+            personajeSeleccionado.setNombre(rs.getString("nombre"));
+            personajeSeleccionado.setVida(rs.getInt("vida"));
+        }
+
+        // Devolvemos el personaje (o null si no se encontró)
+        return personajeSeleccionado;
     }
+
     
     // Obtener un personaje por su tipo
     public Personaje seleccionarEnemigo(int id) throws SQLException {
@@ -93,24 +103,6 @@ public class DaoPersonaje {
             }
 
         return malo;
-    }
-   
-    
-    public ArrayList<Ataque> obtenerAtaquesDePersonaje(int personajeId) throws SQLException {
-        ArrayList<Ataque> listaAtaques = new ArrayList<>();
-      
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM ataques WHERE personaje_id = ?");
-            ps.setInt(1, personajeId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Ataque a = new Ataque();
-                a.setNombre(rs.getString("nombre"));
-                a.setDescripcion(rs.getString("descripcion"));
-                a.setDano(rs.getInt("dano"));
-                listaAtaques.add(a);
-            }
-        return listaAtaques;
     }
    
     
