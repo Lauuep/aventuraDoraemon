@@ -4,15 +4,17 @@ public class Lugares {
 	private int id;
 	private String nombre;
 	private String recompensa;
+	private String categoria;
 	
 	public Lugares() {
 		
 	}
 	
-	public Lugares(int id, String nombre, String recompensa) {
+	public Lugares(int id, String nombre, String recompensa, String categoria) {
 		this.id=id;
 		this.nombre=nombre;
 		this.recompensa=recompensa;
+		this.categoria=categoria;
 	}
 
 	public int getId() {
@@ -38,6 +40,16 @@ public class Lugares {
 	public void setRecompensa(String recompensa) {
 		this.recompensa = recompensa;
 	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+	
+	
 	
 	
 
