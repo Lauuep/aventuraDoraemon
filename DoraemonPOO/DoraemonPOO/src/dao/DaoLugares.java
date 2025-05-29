@@ -58,50 +58,59 @@ public class DaoLugares {
     }
     
     
-    public Lugares obtenerLugarAleatorioMortal() {
-    	
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM lugares WHERE categoria='mortal' ORDER BY RAND() LIMIT 1");
+    public ArrayList<Lugares> obtenerDosLugaresMortalesAleatorios() {
+        ArrayList<Lugares> lista = new ArrayList<>();
+        String sql = "SELECT * FROM lugares WHERE categoria='mortal' ORDER BY RAND() LIMIT 2";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
-            if (rs.next()) {
+            while (rs.next()) {
                 Lugares lugar = new Lugares();
                 lugar.setId(rs.getInt("id"));
                 lugar.setNombre(rs.getString("nombre"));
-                lugar.setRecompensa(rs.getString("descripcion"));
-                
-                
-                return lugar;
+                lugar.setRecompensa(rs.getString("recompensa")); 
+                lugar.setCategoria(rs.getString("categoria")); 
+                lista.add(lugar);
             }
 
         } catch (SQLException e) {
-            System.out.println("Error accediendo al lugares: " + e.getMessage());
+            System.out.println("Error en obtenerDosLugaresMortalesAleatorios: " + e.getMessage());
         }
 
-        return null;
+        return lista;
+    }
+
+    
+    public ArrayList<Lugares> obtenerLugarNoMortalesAleatorios() {
+        ArrayList<Lugares> lugares = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT * FROM lugares WHERE categoria='mortal' ORDER BY RAND() LIMIT 1");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Lugares lugar = new Lugares();
+                lugar.setId(rs.getInt("id"));
+                lugar.setNombre(rs.getString("nombre"));
+                lugares.add(lugar);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error accediendo a lugares mortales: " + e.getMessage());
+        }
+
+        return lugares;
     }
     
-    public Lugares obtenerLugarAleatorioNoMortal() {
-    	
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM lugares WHERE categoria='no_mortal' ORDER BY RAND() LIMIT 1");
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                Lugares lugar = new Lugares();
-                lugar.setId(rs.getInt("id"));
-                lugar.setNombre(rs.getString("nombre"));
-                lugar.setRecompensa(rs.getString("descripcion"));
-                
-                
-                return lugar;
-            }
-
+    public void eliminarLugarPorId(int id) {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM lugares WHERE id = ?")) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error accediendo al lugares: " + e.getMessage());
+            System.out.println("Error eliminando lugar: " + e.getMessage());
         }
-
-        return null;
-    }
  
 
-
+    }
 }

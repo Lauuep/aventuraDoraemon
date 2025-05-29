@@ -112,7 +112,7 @@ public class Personaje {
 	
 	  public void sumarPuntos(int extra) { 
 	    	this.puntos += extra; 
-	    	}
+	 }
 	
 	
     
