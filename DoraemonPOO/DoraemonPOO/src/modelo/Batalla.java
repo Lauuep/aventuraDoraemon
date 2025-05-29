@@ -60,12 +60,7 @@ public class Batalla {
 
         return momento;
     }
-<<<<<<< Updated upstream
-
  // Empieza el combate, devuelve true si gana el jugador
-=======
-    
->>>>>>> Stashed changes
     public boolean iniciarCombate() {
     	
     	boolean resultadoBatalla=false;
@@ -130,7 +125,7 @@ public class Batalla {
         }
     }
 
-    private void realizarAtaque(Personaje atacante, Personaje receptor, Estado estadoActual) {
+    private void realizarAtaque(Personaje atacante, Personaje receptor) {
         ArrayList<Ataque> ataques = atacante.getAtaques();
 
         // Solo hacemos el ataque si tiene ataques disponibles
