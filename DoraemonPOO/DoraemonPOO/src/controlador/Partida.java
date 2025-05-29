@@ -184,7 +184,7 @@ public class Partida {
         // Resultado de la batalla
         if (ganoBatalla) {
         	System.out.println("fuck!!");
-            System.out.println("✅ ¡Ganaste! " + protagonista.getNombre() + " continúa la aventura.");
+            //System.out.println("✅ ¡Ganaste! " + protagonista.getNombre() + " continúa la aventura.");
             Lugares lugarElegido = elegirLugarMortal();
             System.out.println("doble fuck!!");
             
