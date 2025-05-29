@@ -1,6 +1,5 @@
 package controlador;
 
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import Textos.Textos;
 import arte.dibujo;
 import dao.DaoAtaque;
 import dao.DaoLogin;
+import dao.DaoLugares;
 import dao.DaoAtaque;
 import dao.DaoPersonaje;
 import dao.DoaMochila;
@@ -143,20 +143,23 @@ public class Partida {
 
     // *** INICIAR JUEGO ***
     public static void iniciarJuego() throws SQLException {
+    	//INTRO
         // Mostrar introducción
         dibujo.logo();
         System.out.println("🎮 Aquí empieza tu aventura en Doraemon POO...");
         dibujo.caraDoraemon();
         Textos.intro();
 
+        //SELECCION PERSONAJE
         // Elegir personaje principal
         seleccionarPersonaje();
         
-        //llave de acceso a los metodos de Dao Personaje
+        //llave de acceso a los metodos de Daos
         DaoPersonaje daoPersonaje = DaoPersonaje.getInstance();
-        
         DaoAtaque daoAtaque = DaoAtaque.getInstance();
-
+        DaoLugares daoLugares= DaoLugares.getInstance();
+       
+        //ASIGNAR ENEMIGO AL JUGADOR
         // Buscar un enemigo según el personaje elegido
         Personaje enemigo = daoPersonaje.obtenerEnemigoPorLugarDePersonaje(protagonista.getId());
 
@@ -170,9 +173,12 @@ public class Partida {
 
         // Mostrar enemigo y empezar la batalla
         System.out.println("⚔️ Te enfrentas a: " + enemigo.getNombre());
+        
+        //BATLLA GUARDIAN
         Batalla batalla = new Batalla(protagonista, enemigo);
-
-        boolean ganoBatalla = batalla.iniciarCombate(); // Este método debería devolver true o false
+        
+        // Este método debería devolver true o false
+        boolean ganoBatalla = batalla.iniciarCombate();
 
         // Resultado de la batalla
         if (ganoBatalla) {
@@ -180,6 +186,17 @@ public class Partida {
         } else {
             System.out.println("💀 Has sido derrotado. Fin del juego.");
         }
+        
+       //1era ELECCION LUGAR NO MORTAL
+        
+        //2do RANDOM LUGAR MORTAL
+        
+        //3er ELECCION LUGAR NO MORTAL
+        
+        //BATALLA FINAL
+        
+        //FINAL 
+        
     }
 
     
