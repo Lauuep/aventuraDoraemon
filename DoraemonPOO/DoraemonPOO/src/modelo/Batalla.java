@@ -221,6 +221,7 @@ public class Batalla {
 
         // El jugador elige el ataque
         int seleccion = sc.nextInt() - 1;
+        sc.nextLine();
 
         // Si se pasa de rango, se elige el primero
         if (seleccion < 0 || seleccion >= ataques.size()) {
@@ -350,6 +351,7 @@ public class Batalla {
                 // Pedimos al jugador que elija un objeto
                 System.out.print("Elige un objeto: ");
                 int seleccion = sc.nextInt() - 1;
+                sc.nextLine();
 
                 // Comprobamos si la selección está en el rango
                 if (seleccion >= 0 && seleccion < mochila.size()) {
