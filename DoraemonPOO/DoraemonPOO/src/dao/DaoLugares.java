@@ -58,9 +58,31 @@ public class DaoLugares {
     }
     
     
-    public Lugares obtenerLugarAleatorio() {
+    public Lugares obtenerLugarAleatorioMortal() {
     	
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM lugares ORDER BY RAND() LIMIT 1");
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM lugares WHERE categoria='mortal' ORDER BY RAND() LIMIT 1");
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                Lugares lugar = new Lugares();
+                lugar.setId(rs.getInt("id"));
+                lugar.setNombre(rs.getString("nombre"));
+                lugar.setRecompensa(rs.getString("descripcion"));
+                
+                
+                return lugar;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error accediendo al lugares: " + e.getMessage());
+        }
+
+        return null;
+    }
+    
+    public Lugares obtenerLugarAleatorioNoMortal() {
+    	
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM lugares WHERE categoria='no_mortal' ORDER BY RAND() LIMIT 1");
              ResultSet rs = stmt.executeQuery()) {
 
             if (rs.next()) {
