@@ -29,6 +29,10 @@ public class DaoLogin {
     	//sentencia sql
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
+<<<<<<< Updated upstream
+=======
+        //parámetro de la consulta
+>>>>>>> Stashed changes
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
         return rs.next();
