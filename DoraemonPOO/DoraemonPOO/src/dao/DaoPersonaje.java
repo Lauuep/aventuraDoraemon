@@ -3,7 +3,7 @@ package dao;
 import modelo.Personaje;
 import modelo.Ataque;
 import modelo.Enemigo;
-import modelo.Objeto;
+import modelo.Mochila;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package dao;
 
-import modelo.Objeto;
+import modelo.Mochila;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,12 @@ public class DoaMochila {
         }
         return instance;
     }
+    
+    
 
     // Obtener todos los objetos en la mochila de un personaje
-    public ArrayList<Objeto> obtenerObjetosDeMochila(int personajeId) {
-        ArrayList<Objeto> lista = new ArrayList<>();
+    public ArrayList<Mochila> obtenerObjetosDeMochila(int personajeId) {
+        ArrayList<Mochila> lista = new ArrayList<>();
         String sql = "SELECT * FROM mochila WHERE personaje_id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -30,7 +32,7 @@ public class DoaMochila {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Objeto obj = new Objeto();
+                Mochila obj = new Mochila();
                 obj.setId(rs.getInt("id"));
                 obj.setNombre(rs.getString("nombre"));
                 obj.setDescripcion(rs.getString("descripcion"));
@@ -45,4 +47,13 @@ public class DoaMochila {
 
         return lista;
     }
+    
+    public void restarCantidadObjeto(int personajeId, int objetoId) throws SQLException {
+        String sql = "UPDATE mochila SET cantidad = cantidad - 1 WHERE id_personaje = ? AND id_objeto = ? AND cantidad > 0";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, personajeId);
+        ps.setInt(2, objetoId);
+        ps.executeUpdate();
+    }
+    
 }
